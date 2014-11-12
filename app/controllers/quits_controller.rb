@@ -1,10 +1,15 @@
 class QuitsController < ApplicationController
+
+  before_filter :verify_same_user
+
+
   def new
     @user = User.find params[:user_id]
     @quit = @user.quits.build
   end
 
   def create
+    @user = User.find(params[:user_id])
     @quit = Quit.new quit_params
     if @quit.save
       flash[:success] = 'Created!'
@@ -15,10 +20,12 @@ class QuitsController < ApplicationController
   end
 
   def edit
+    @user = User.find(params[:user_id])
     @quit = Quit.find params[:id]
   end
 
   def update
+    @user = User.find(params[:user_id])
     @quit = Quit.find params[:id]
     if @quit.update quit_params
       flash[:success] = 'Updated!'
@@ -30,7 +37,15 @@ class QuitsController < ApplicationController
 
   private
 
+  def verify_same_user
+    user = User.find(params[:user_id])
+    if current_user != user
+      flash[:alert] = "Can't create/edit a quit for another person!"
+      redirect_to root_path
+    end
+  end
+
   def quit_params
-    params.require(:quit).permit(:user_id, :text)
+    params.require(:quit).permit(:text)
   end
 end
