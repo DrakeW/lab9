@@ -10,7 +10,7 @@ class QuitsController < ApplicationController
 
   def create
     @user = User.find(params[:user_id])
-    @quit = Quit.new quit_params
+    @quit = @user.quits.build quit_params
     if @quit.save
       flash[:success] = 'Created!'
       redirect_to @quit.user
@@ -39,7 +39,7 @@ class QuitsController < ApplicationController
 
   def verify_same_user
     user = User.find(params[:user_id])
-    if current_user != user
+    if current_user != user and current_user.admin == false 
       flash[:alert] = "Can't create/edit a quit for another person!"
       redirect_to root_path
     end

@@ -11,3 +11,5 @@ u.quits.create! text: "I quit soda!"
 u.quits.create! text: "I quit running, I'm biking instead!"
 
 u = User.create! name: "Wonjun", email: "won@won.com", password: "password"
+
+u = User.create! name: "Admin", email: "junyuw@berkeley.edu", password: "adladl2012", admin: true
